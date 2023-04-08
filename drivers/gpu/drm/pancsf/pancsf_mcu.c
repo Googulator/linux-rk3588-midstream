@@ -251,7 +251,6 @@ pancsf_fw_mem_alloc(struct pancsf_device *pfdev,
 		    int prot)
 {
 	struct pancsf_fw_mem *mem = kzalloc(sizeof(*mem), GFP_KERNEL);
-	unsigned int allocated_pages;
 	int ret;
 
 	if (!mem)
@@ -263,13 +262,12 @@ pancsf_fw_mem_alloc(struct pancsf_device *pfdev,
 		goto err_free_mem;
 	}
 
-	allocated_pages = alloc_pages_bulk_array(GFP_KERNEL, num_pages, mem->pages);
-	if (num_pages != allocated_pages) {
+	mem->num_pages = alloc_pages_bulk_array(GFP_KERNEL, num_pages, mem->pages);
+	if (num_pages != mem->num_pages) {
 		ret = -ENOMEM;
 		goto err_free_mem;
 	}
 
-	mem->num_pages = num_pages;
 	ret = sg_alloc_table_from_pages(&mem->sgt, mem->pages, num_pages,
 					0, num_pages << PAGE_SHIFT, GFP_KERNEL);
 	if (ret) {

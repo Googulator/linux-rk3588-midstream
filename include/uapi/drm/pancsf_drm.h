@@ -92,6 +92,7 @@ struct drm_pancsf_gpu_info {
 	__u32 texture_features[4];
 	__u32 as_present;
 	__u32 core_group_count;
+	__u32 pad;
 	__u64 shader_present;
 	__u64 l2_present;
 	__u64 tiler_present;
@@ -103,6 +104,7 @@ struct drm_pancsf_csif_info {
 	__u32 cs_reg_count;
 	__u32 scoreboard_slot_count;
 	__u32 unpreserved_cs_reg_count;
+	__u32 pad;
 };
 
 struct drm_pancsf_dev_query {
@@ -206,7 +208,7 @@ struct drm_pancsf_vm_map {
 	/** @flags: Combination of PANCSF_VMA_MAP_ flags */
 	__u32 flags;
 
-	/** @pad: padding field, MBZ. */
+	/** @pad: MBZ. */
 	__u32 pad;
 
 	/** @bo_handle: Buffer object to map. */
@@ -312,6 +314,9 @@ struct drm_pancsf_group_submit {
 	/** @group_handle: Handle of the group to queue jobs to. */
 	__u32 group_handle;
 
+	/** @pad: MBZ. */
+	__u32 pad;
+
 	/** @syncs: Array of queue submit operations. */
 	struct drm_pancsf_obj_array queue_submits;
 };
@@ -363,6 +368,9 @@ struct drm_pancsf_group_create {
 
 	/** @priority: Group priority (see drm_drm_pancsf_cs_group_priority). */
 	__u8 priority;
+
+	/** @pad: Padding field, MBZ. */
+	__u32 pad;
 
 	/** @compute_core_mask: Mask encoding cores that can be used for compute jobs. */
 	__u64 compute_core_mask;
