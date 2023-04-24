@@ -361,8 +361,22 @@ static int pancsf_ioctl_bo_mmap_offset(struct drm_device *ddev, void *data,
 				       struct drm_file *file)
 {
 	struct drm_pancsf_bo_mmap_offset *args = data;
+	struct drm_gem_object *obj;
+	int ret;
 
-	return drm_gem_dumb_map_offset(file, ddev, args->handle, &args->offset);
+	obj = drm_gem_object_lookup(file, args->handle);
+	if (!obj)
+		return -ENOENT;
+
+	ret = drm_gem_create_mmap_offset(obj);
+	if (ret)
+		goto out;
+
+	args->offset = drm_vma_node_offset_addr(&obj->vma_node);
+
+out:
+	drm_gem_object_put(obj);
+	return ret;
 }
 
 static int pancsf_ioctl_group_submit(struct drm_device *ddev, void *data,
